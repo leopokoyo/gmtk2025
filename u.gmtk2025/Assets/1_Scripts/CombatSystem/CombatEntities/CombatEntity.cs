@@ -24,6 +24,8 @@ namespace _1_Scripts.CombatSystem.CombatEntities
         public List<ICombatAction> CombatActions => _data.CombatActions;
         public int CurrentHealth;
         public List<CombatEffectTypes> CurrentEffects;
+        
+        public bool IsAlive => CurrentHealth > 0;
 
         public void Initialize(List<CombatEffectTypes> currentEffects)
         {
@@ -31,5 +33,23 @@ namespace _1_Scripts.CombatSystem.CombatEntities
             CurrentHealth = MaxHealth;
         }
 
+        public void TakeDamage(int damage)
+        {
+            CurrentHealth -= damage;
+        }
+
+        public void GainEffect(CombatEffectTypes effects)
+        {
+            if (!CurrentEffects.Contains(effects)) CurrentEffects.Add(effects);
+        }
+
+        /// <summary>
+        /// Try to remove the desired effect (only occurs if effect is present)
+        /// </summary>
+        /// <param name="effects"></param>
+        public void RemoveEffect(CombatEffectTypes effects)
+        {
+            if (CurrentEffects.Contains(effects)) CurrentEffects.Remove(effects);
+        }
     }
 }
