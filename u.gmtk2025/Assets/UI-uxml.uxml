@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI-uss.uss?fileID=7433441132597879392&amp;guid=a561a3a1d204bc647a26523226a06c88&amp;type=3#UI-uss" />
+    <ui:VisualElement name="Panel" class="panel" style="flex-grow: 1; background-color: rgb(253, 155, 6); -unity-background-image-tint-color: rgb(143, 20, 20); background-size: 98% 100%; background-repeat: no-repeat space; -unity-slice-left: 0; border-left-color: rgba(0, 0, 0, 0.85); border-right-color: rgba(0, 0, 0, 0.85); border-top-color: rgba(0, 0, 0, 0.85); border-bottom-color: rgba(0, 0, 0, 0.85); border-top-width: 4px; border-right-width: 4px; border-bottom-width: 4px; border-left-width: 4px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; transform-origin: center;" />
+</ui:UXML>

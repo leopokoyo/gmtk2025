@@ -1,0 +1,12 @@
+.panel {
+    background-color: rgb(199, 156, 91);
+    width: 20%;
+    height: 100%;
+    max-height: 30%;
+    max-width: 20%;
+    align-items: auto;
+    justify-content: space-evenly;
+    align-self: center;
+    align-content: center;
+    top: 30%;
+}
