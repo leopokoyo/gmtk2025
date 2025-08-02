@@ -2,6 +2,6 @@
 {
     public enum CombatState
     {
-        Planning, Resolving, Finished
+        Planning, Resolving, EndOfTurn, EndOfCombat, OutOfCombat
     }
 }

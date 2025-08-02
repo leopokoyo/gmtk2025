@@ -21,6 +21,7 @@ MonoBehaviour:
   MaxHealth: 5
   CombatActions:
   - rid: 5164085091919462546
+  - rid: 5164085115285667917
   references:
     version: 2
     RefIds:
@@ -31,3 +32,10 @@ MonoBehaviour:
         _accuracy: 1
         _critChance: 0.1
         _range: 1
+    - rid: 5164085115285667917
+      type: {class: FireAttack, ns: _1_Scripts.CombatSystem.CombatActions.Examples, asm: Assembly-CSharp}
+      data:
+        _actionName: FireAttack
+        _accuracy: 0.7
+        _critChance: 0.5
+        _range: 4
