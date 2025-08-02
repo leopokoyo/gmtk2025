@@ -7,7 +7,7 @@ public class PlayerCollision : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Touched them");
+            Debug.Log(collision.relativeVelocity);
         }
     }
 }
