@@ -5,6 +5,7 @@ using _1_Scripts.CombatSystem.CombatActions.Interfaces;
 using _1_Scripts.CombatSystem.CombatEntities;
 using _1_Scripts.CombatSystem.DamageCalculators;
 using _1_Scripts.CombatSystem.Services.Events;
+using UnityEngine;
 
 namespace _1_Scripts.CombatSystem.Services
 {
@@ -12,38 +13,36 @@ namespace _1_Scripts.CombatSystem.Services
     {
         public event EventHandler<DamageDealtEventArgs> OnDamageDealt;
 
-        public CombatEntity Player { get; private set; }
-        public List<CombatEntity> Enemies { get; private set; }
-
-        public CombatService(CombatEntity player, List<CombatEntity> enemies)
+        public void ExecuteAction(BaseCombatAction action, List<CombatEntity> targets, CombatEntity caster)
         {
-            Player = player;
-            Enemies = enemies;
-        }
+            if (action == null || caster == null || targets == null || targets.Count == 0) return;
 
-        public void ExecuteAction(ICombatAction action)
-        {
-            foreach (var target in action.Targets)
+            if (action is not BaseCombatAttackAction attackAction) return;
+
+            foreach (var target in targets)
             {
-                // TODO: ADD checks for range, add checks for critical hits, add checks for accuracy
-                
-                if (action is not CombatAttackAction attackAction) continue;
                 var context = new DamageCalculationEventArgs
                 {
-                    Caster = action.Caster,
+                    Caster = caster,
                     Target = target
                 };
 
                 var damage = attackAction.DamageCalculator?.Invoke(context) ?? 0;
                 target.TakeDamage(damage);
 
-                // Apply effects if any
-                if (attackAction.CombatEffects == null) continue;
-                foreach (var effect in attackAction.CombatEffects)
+                OnDamageDealt?.Invoke(this, new DamageDealtEventArgs(caster, target, damage));
+
+                if (attackAction.CombatEffects != null)
                 {
-                    target.GainEffect(effect.EffectType);
+                    foreach (var effect in attackAction.CombatEffects)
+                    {
+                        target.GainEffect(effect.EffectType);
+                    }
                 }
+
+                Debug.Log($"[CombatService] {caster.name} uses {attackAction.CombatActionName} on {target.name} for {damage} damage.");
             }
         }
     }
+
 }

@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using _1_Scripts.CombatSystem.CombatActions;
 using _1_Scripts.CombatSystem.CombatActions.Interfaces;
 using _1_Scripts.CombatSystem.CombatEntities.ScriptableObjects;
 using _1_Scripts.CombatSystem.Effects.Enums;
-using _1_Scripts.CombatSystem.Effects.Interfaces;
 using UnityEngine;
 
 namespace _1_Scripts.CombatSystem.CombatEntities
 {
     public class CombatEntity : MonoBehaviour
     {
-        [SerializeField]
-        private CombatEntityData _data { get; set; }
+        
+        public CombatEntityData _data;
         
         public int Strength => _data.Strength;
         public int Agility => _data.Agility;
@@ -21,13 +21,13 @@ namespace _1_Scripts.CombatSystem.CombatEntities
         public int Intelligence => _data.Intelligence;
         private int MaxHealth => _data.MaxHealth;
         
-        public List<ICombatAction> CombatActions => _data.CombatActions;
+        public List<BaseCombatAction> CombatActions => _data.CombatActions;
         public int CurrentHealth;
         public List<CombatEffectTypes> CurrentEffects;
         
         public bool IsAlive => CurrentHealth > 0;
 
-        public void Initialize(List<CombatEffectTypes> currentEffects)
+        public void Initialize(List<CombatEffectTypes> currentEffects = null)
         {
             CurrentEffects = currentEffects ?? new List<CombatEffectTypes>();
             CurrentHealth = MaxHealth;

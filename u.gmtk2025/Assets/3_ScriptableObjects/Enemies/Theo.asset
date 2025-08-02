@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c83cdf6688a8479eb01a59d553d9dfcf, type: 3}
+  m_Name: Theo
+  m_EditorClassIdentifier: 
+  Strength: 1
+  Agility: 1
+  Cunning: 1
+  Wisdom: 0
+  Willpower: 0
+  Intelligence: 0
+  MaxHealth: 5
+  CombatActions:
+  - rid: 5164085091919462546
+  references:
+    version: 2
+    RefIds:
+    - rid: 5164085091919462546
+      type: {class: BasicAttack, ns: _1_Scripts.CombatSystem.CombatActions.Examples, asm: Assembly-CSharp}
+      data:
+        _actionName: Basic Attack
+        _accuracy: 1
+        _critChance: 0.1
+        _range: 1
