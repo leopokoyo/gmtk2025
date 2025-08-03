@@ -18,5 +18,9 @@ namespace _1_Scripts.CombatSystem.Events
 
         public static event Action<CombatEntity, int, int> OnEntityDied;
         public static void RaiseCombatEntityDied(CombatEntity entity, int playersAlive, int enemiesAlive) => OnEntityDied?.Invoke(entity, playersAlive, enemiesAlive);
+        
+        public static event Action<CombatEntity> OnPlayerActionRequested;
+        public static void RaisePlayerActionRequested(CombatEntity player) => OnPlayerActionRequested?.Invoke(player);
+        
     }
 }

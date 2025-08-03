@@ -1,70 +1,109 @@
-﻿using _1_Scripts.CombatSystem.CombatEntities;
-using _1_Scripts.CombatSystem.Events;
-using _1_Scripts.CombatSystem.Managers;
-using UnityEngine;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _1_Scripts.CombatSystem.CombatActions.Interfaces;
+using _1_Scripts.CombatSystem.CombatEntities;
+using _1_Scripts.CombatSystem.Events;
+using _1_Scripts.CombatSystem.Managers;
 using _1_Scripts.CombatSystem.Managers.Enums;
+using _1_Scripts.CombatSystem.Services.ActionSelectorService;
+using UnityEngine;
 
-namespace _1_Scripts.Bootstrap
+public class TestCombatBootstrapper : MonoBehaviour
 {
-    public class TestCombatBootstrap : MonoBehaviour
+    private ActionSelectorService _actionSelectorService;
+
+    [SerializeField]
+    private List<CombatEntity> _players = new();
+    
+    [SerializeField]
+    private List<CombatEntity> _enemies = new();
+
+    private void Awake()
     {
-        public List<CombatEntity> players;
-        public List<CombatEntity> enemies;
+        _actionSelectorService = new ActionSelectorService();
 
-        private void OnEnable()
+        CombatEvents.OnCombatStart += OnCombatStartHandler;
+        CombatEvents.OnCombatStateChanged += OnCombatStateChangedHandler;
+    }
+
+    private void OnDestroy()
+    {
+        CombatEvents.OnCombatStart -= OnCombatStartHandler;
+        CombatEvents.OnCombatStateChanged -= OnCombatStateChangedHandler;
+    }
+    
+    private void Start()
+    {
+        // Raise the combat start event to kick off the process
+        CombatEvents.RaiseCombatStart(this, new StartCombatEventArgs(_players, _enemies));
+    }
+
+    private void OnCombatStartHandler(object sender, StartCombatEventArgs e)
+    {
+        _players = e.PlayerParty;
+        _enemies = e.EnemiesInCombat;
+    }
+
+    private void OnCombatStateChangedHandler(CombatState state)
+    {
+        if (state == CombatState.Planning)
         {
-            CombatEvents.OnCombatStateChanged += OnCombatStateChanged;
+            StartCoroutine(AutoSelectPlayerActions());
         }
+    }
 
-        private void OnDisable()
-        {
-            CombatEvents.OnCombatStateChanged -= OnCombatStateChanged;
-        }
+    private IEnumerator AutoSelectPlayerActions()
+    {
+        _actionSelectorService.StartPlayerSelection(_players);
 
-        private void Start()
+        while (_actionSelectorService.CurrentPlayer != null)
         {
-            CombatEvents.RaiseCombatStart(this, new StartCombatEventArgs(players, enemies));
-        }
+            var player = _actionSelectorService.CurrentPlayer;
 
-        private void OnCombatStateChanged(CombatState state)
-        {
-            switch (state)
+            // Pick the first available action
+            var action = player.CombatActions.FirstOrDefault();
+            if (action == null)
             {
-                case CombatState.Planning:
-                    SimulateActionsForAll();
-                    CombatManager.Instance.ProceedToNextPhase();
-                    break;
-
-                case CombatState.EndOfCombat:
-                    Debug.Log("[TestCombatBootstrap] Combat ended.");
-                    break;
+                Debug.LogWarning($"No actions found for player {player.name}. Skipping.");
+                _actionSelectorService.SubmitPlayerAction(null, null);
+                yield return null;
+                continue;
             }
-        }
 
-        private void SimulateActionsForAll()
-        {
-            // Players
-            foreach (var player in players.Where(p => p.IsAlive))
+            // Pick first alive enemy as target
+            var target = _enemies.FirstOrDefault(e => e.IsAlive);
+            if (target == null)
             {
-                var action = player.CombatActions.FirstOrDefault();
-                var target = enemies.FirstOrDefault(e => e.IsAlive);
-                if (action != null && target != null)
-                {
-                    CombatManager.Instance.StorePlayerAction(player, action, new List<CombatEntity> { target });
-                }
+                Debug.LogWarning("No alive enemies found for targeting.");
+                _actionSelectorService.SubmitPlayerAction(action, new List<CombatEntity>());
+            }
+            else
+            {
+                _actionSelectorService.SubmitPlayerAction(action, new List<CombatEntity> { target });
             }
 
-            // Enemies
-            foreach (var enemy in enemies.Where(e => e.IsAlive))
+            // Wait 0.2 seconds before next player action
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        // All player actions selected; assign enemy actions immediately
+        AssignEnemyActions();
+    }
+
+    private void AssignEnemyActions()
+    {
+        foreach (var enemy in _enemies.Where(e => e.IsAlive))
+        {
+            // Choose enemy action (pick first action)
+            var action = enemy.CombatActions.FirstOrDefault();
+
+            // Choose first alive player as target
+            var target = _players.FirstOrDefault(p => p.IsAlive);
+
+            if (action != null && target != null)
             {
-                var action = enemy.CombatActions.FirstOrDefault();
-                var target = players.FirstOrDefault(p => p.IsAlive);
-                if (action != null && target != null)
-                {
-                    CombatManager.Instance.StorePlayerAction(enemy, action, new List<CombatEntity> { target });
-                }
+                CombatManager.Instance.StorePlayerAction(enemy, action, new List<CombatEntity> { target });
             }
         }
     }

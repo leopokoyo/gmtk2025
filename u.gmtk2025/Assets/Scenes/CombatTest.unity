@@ -866,7 +866,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d61f147a725f4db7af53219fc73f3f3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _data: {fileID: 11400000, guid: f13f555620752294fa81103dda4efff8, type: 2}
+  _data: {fileID: 11400000, guid: 07d3dfcdf5dfaf4429c3edd210ffaed0, type: 2}
   CurrentHealth: 0
   CurrentEffects: 
 --- !u!212 &1421371634
@@ -968,10 +968,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8153e7826ad24353ba55793c7ffbf914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  players:
-  - {fileID: 655363522}
-  enemies:
+  _players:
   - {fileID: 1421371633}
+  _enemies:
+  - {fileID: 655363522}
 --- !u!4 &1528390824
 Transform:
   m_ObjectHideFlags: 0

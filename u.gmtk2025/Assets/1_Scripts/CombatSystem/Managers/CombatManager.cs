@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using _1_Scripts.CombatSystem.CombatActions.Interfaces;
 using _1_Scripts.CombatSystem.CombatEntities;
@@ -22,10 +23,10 @@ namespace _1_Scripts.CombatSystem.Managers
 
         private CombatState _state = CombatState.OutOfCombat;
 
-        public CombatState State
+        private CombatState State
         {
             get => _state;
-            private set
+            set
             {
                 if (_state == value) return;
                 _state = value;
@@ -108,19 +109,28 @@ namespace _1_Scripts.CombatSystem.Managers
                     break;
 
                 case CombatState.EndOfTurn:
-                    bool playersAlive = _players.Any(p => p.IsAlive);
-                    bool enemiesAlive = _enemies.Any(e => e.IsAlive);
-
-                    if (!playersAlive || !enemiesAlive)
+                    if (_players.All(p => !p.IsAlive) || _enemies.All(e => !e.IsAlive))
                     {
-                        HandleCombatEnd();
+                        State = CombatState.EndOfCombat;
                     }
                     else
                     {
                         ClearTurnQueue();
                         State = CombatState.Planning;
+                        // Important: Let bootstrap or UI handle starting next planning phase.
                     }
                     break;
+
+                case CombatState.EndOfCombat:
+                    HandleCombatEnd();
+                    break;
+
+                case CombatState.OutOfCombat:
+                    // idle state, waiting for combat start
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -129,7 +139,6 @@ namespace _1_Scripts.CombatSystem.Managers
             Debug.Log("[CombatManager] Combat has ended.");
             CombatEvents.RaiseCombatEnd(_players.Count(p => p.IsAlive), _enemies.Count(e => e.IsAlive));
 
-            // Optional cleanup logic here...
             State = CombatState.OutOfCombat;
         }
 
@@ -158,10 +167,24 @@ namespace _1_Scripts.CombatSystem.Managers
 
             value.SelectedAction = action;
             value.SelectedTargets = targets;
+
             Debug.Log($"[CombatManager] Stored action '{action.CombatActionName}' for {caster.name}");
+
+            if (AllAliveCombatantsSubmitted())
+            {
+                Debug.Log("[CombatManager] All actions received, proceeding to next phase.");
+                ProceedToNextPhase();
+            }
         }
 
-        public void ResolveRound()
+        private bool AllAliveCombatantsSubmitted()
+        {
+            return _allCombatants
+                .Where(entity => entity.IsAlive)
+                .All(entity => _turnQueue[entity].SelectedAction != null);
+        }
+
+        private void ResolveRound()
         {
             Debug.Log("[CombatManager] Resolving round...");
 
