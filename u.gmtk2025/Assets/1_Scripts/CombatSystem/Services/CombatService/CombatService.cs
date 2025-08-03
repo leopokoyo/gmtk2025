@@ -12,6 +12,7 @@ namespace _1_Scripts.CombatSystem.Services.CombatService
     public class CombatService
     {
         public event EventHandler<DamageDealtEventArgs> OnDamageDealt;
+        private readonly RowSystemService.RowSystemService _rowSystemService = new ();
 
         public void ExecuteAction(BaseCombatAction action, List<CombatEntity> targets, CombatEntity caster)
         {
@@ -27,6 +28,15 @@ namespace _1_Scripts.CombatSystem.Services.CombatService
                     Target = target
                 };
 
+                // Checks if targets are in range
+                if (!_rowSystemService.IsInRange(caster, target, attackAction.Range))
+                {
+                    
+                    Debug.LogWarning($"[CombatService] Target {target.name} is out of range for {caster.name}'s attack '{attackAction.CombatActionName}'.");
+                    continue;
+                }
+                Debug.Log($"$[CombatService] Target {target.name} is in range for {caster.name}'s attack '{attackAction.CombatActionName}' with {_rowSystemService.DistanceBetweenEntities(caster, target)}");
+
                 var damage = attackAction.DamageCalculator?.Invoke(context) ?? 0;
                 
                 target.TakeDamage(damage);
@@ -39,7 +49,6 @@ namespace _1_Scripts.CombatSystem.Services.CombatService
                 {
                     target.GainEffect(effect.EffectType);
                 }
-
             }
         }
     }

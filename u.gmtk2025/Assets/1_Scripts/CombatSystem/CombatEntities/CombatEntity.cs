@@ -4,6 +4,8 @@ using _1_Scripts.CombatSystem.CombatActions;
 using _1_Scripts.CombatSystem.CombatActions.Interfaces;
 using _1_Scripts.CombatSystem.CombatEntities.ScriptableObjects;
 using _1_Scripts.CombatSystem.Effects.Enums;
+using _1_Scripts.CombatSystem.Events;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _1_Scripts.CombatSystem.CombatEntities
@@ -26,6 +28,15 @@ namespace _1_Scripts.CombatSystem.CombatEntities
         public List<CombatEffectTypes> CurrentEffects;
         
         public bool IsAlive => CurrentHealth > 0;
+        
+        public int RowIndex { get; private set; }
+
+        public void SetRow(int rowIndex) => RowIndex = CombatTools.ClampToValidRow(rowIndex);
+
+        public void MoveRow(int distance, int direction)
+        {
+            SetRow(distance * direction);
+        }
 
         public void Initialize(List<CombatEffectTypes> currentEffects = null)
         {

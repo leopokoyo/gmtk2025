@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace _1_Scripts.CombatSystem.CombatActions.Examples
 {
+    [CreateAssetMenu(fileName = "Attack Action - Basic Fire Attack", menuName = "ScriptableObjects/Combat/Actions/Attacks/FireAttack")]
     public class FireAttack : BaseCombatAttackAction
     {
         [SerializeField] private string actionName = "FireAttack";

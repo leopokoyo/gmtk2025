@@ -35,6 +35,17 @@ public class TestCombatBootstrapper : MonoBehaviour
     
     private void Start()
     {
+        // Player rows: 0 (front), 1 (back)
+        for (int i = 0; i < _players.Count; i++)
+        {
+            int row = i < 2 ? 0 : 1;
+            _players[i].SetRow(1);
+        }
+
+        // Enemy rows: 2 (front), 3 (back)
+        _enemies[0].SetRow(2);
+        _enemies[1].SetRow(3);
+        
         // Raise the combat start event to kick off the process
         CombatEvents.RaiseCombatStart(this, new StartCombatEventArgs(_players, _enemies));
     }

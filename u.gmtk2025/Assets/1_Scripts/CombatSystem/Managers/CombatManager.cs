@@ -8,6 +8,7 @@ using _1_Scripts.CombatSystem.Events;
 using _1_Scripts.CombatSystem.Managers.Enums;
 using _1_Scripts.CombatSystem.Managers.Turns;
 using _1_Scripts.CombatSystem.Services.CombatService;
+using _1_Scripts.CombatSystem.Services.RowSystemService;
 using UnityEngine;
 
 namespace _1_Scripts.CombatSystem.Managers
@@ -38,6 +39,51 @@ namespace _1_Scripts.CombatSystem.Managers
 
         private Dictionary<CombatEntity, CombatTurn> _turnQueue = new();
         
+        public void SetCombatants(List<CombatEntity> entities)
+        {
+            _allCombatants = entities;
+        }
+
+        /// <summary>
+        /// Returns a dictionary with row index as key and list of entities in that row as value.
+        /// </summary>
+        public Dictionary<int, List<CombatEntity>> GetCombatantsByRow()
+        {
+            return _allCombatants
+                .Where(e => e.IsAlive)
+                .GroupBy(e => e.RowIndex)
+                .ToDictionary(g => g.Key, g => g.ToList());
+        }
+
+        /// <summary>
+        /// Gets all combatants in a specific row.
+        /// </summary>
+        public List<CombatEntity> GetCombatantsInRow(int rowIndex)
+        {
+            return _allCombatants
+                .Where(e => e.RowIndex == rowIndex && e.IsAlive)
+                .ToList();
+        }
+
+        /// <summary>
+        /// Gets the row of a specific combatant.
+        /// </summary>
+        public int GetCombatantRow(CombatEntity entity) => entity.RowIndex;
+
+        /// <summary>
+        /// Debug tool: prints all combatants by row.
+        /// </summary>
+        public void DebugPrintCombatantsByRow()
+        {
+            var byRow = GetCombatantsByRow();
+            Debug.Log($"[CombatManager] Total Combatants: {byRow.Count}, in the follow rows: ");
+            for (int i = CombatConstants.StartingRowIndex; i <= CombatConstants.EndingRowIndex; i++)
+            {
+                var rowList = byRow.ContainsKey(i) ? byRow[i] : new List<CombatEntity>();
+                Debug.Log($"Row {i}: {string.Join(", ", rowList.Select(e => e.name))}");
+            }
+        }
+        
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -48,6 +94,7 @@ namespace _1_Scripts.CombatSystem.Managers
 
             Instance = this;
             _combatService = new CombatService();
+      
 
             CombatEvents.OnCombatStart += OnCombatStartHandler;
 
@@ -151,6 +198,7 @@ namespace _1_Scripts.CombatSystem.Managers
         private void EndTurn()
         {
             Debug.Log("[CombatManager] Turn Ended.");
+            DebugPrintCombatantsByRow();
             ProceedToNextPhase();
         }
         
@@ -217,4 +265,5 @@ namespace _1_Scripts.CombatSystem.Managers
         
         public bool IsEntityAlive(CombatEntity entity) => entity.IsAlive;
     }
+    
 }

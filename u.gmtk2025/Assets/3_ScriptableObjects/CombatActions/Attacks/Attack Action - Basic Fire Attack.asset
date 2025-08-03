@@ -9,15 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c83cdf6688a8479eb01a59d553d9dfcf, type: 3}
-  m_Name: Player
+  m_Script: {fileID: 11500000, guid: 9ff26b8cf03b468a9071368cc85d7917, type: 3}
+  m_Name: Attack Action - Basic Fire Attack
   m_EditorClassIdentifier: 
-  Strength: 2
-  Agility: 1
-  Cunning: 1
-  Wisdom: 1
-  Willpower: 1
-  Intelligence: 1
-  MaxHealth: 5
-  CombatActions:
-  - {fileID: 11400000, guid: b0c01e6ba5312654b8a576ca9bbab6a5, type: 2}
+  actionName: FireAttack
+  accuracy: 0.7
+  critChance: 0.5
+  range: 4
