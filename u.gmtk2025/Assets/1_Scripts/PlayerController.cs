@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     int hashSwordAnimation;
     [SerializeField] GameObject Sword;
     Rigidbody2D rb;
+    float speed;
     void Start()
     {
         rb = this.GetComponent<Rigidbody2D>();
@@ -26,6 +27,7 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         playerMove = context.ReadValue<Vector2>().normalized;
+        speed = context.ReadValue<Vector2>().x + context.ReadValue<Vector2>().y;
     }
 
     public void OnAttack(InputAction.CallbackContext context)
@@ -44,7 +46,7 @@ public class PlayerController : MonoBehaviour
         {
             rb.linearVelocity = Vector2.zero;
         }
-        
+        animator.SetFloat("Speed", Mathf.Abs(speed));
         //this.transform.position = new Vector3(this.transform.position.x + playerMove.x / playerSpeed, this.transform.position.y + playerMove.y / playerSpeed, this.transform.position.z);
     }
 
