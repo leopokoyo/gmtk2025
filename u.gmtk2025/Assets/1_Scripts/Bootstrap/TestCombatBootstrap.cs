@@ -35,16 +35,18 @@ public class TestCombatBootstrapper : MonoBehaviour
     
     private void Start()
     {
-        // Player rows: 0 (front), 1 (back)
-        for (int i = 0; i < _players.Count; i++)
-        {
-            int row = i < 2 ? 0 : 1;
-            _players[i].SetRow(1);
-        }
-
-        // Enemy rows: 2 (front), 3 (back)
-        _enemies[0].SetRow(2);
-        _enemies[1].SetRow(3);
+        foreach (var player in _players) player.SetRow(Random.Range(0, 1));
+        foreach (var enemy in _enemies) enemy.SetRow(Random.Range(2, 3));
+        // // Player rows: 0 (front), 1 (back)
+        // for (var i = 0; i < _players.Count; i++)
+        // {
+        //     var row = i < 2 ? 0 : 1;
+        //     _players[i].SetRow(1);
+        // }
+        //
+        // // Enemy rows: 2 (front), 3 (back)
+        // _enemies[0].SetRow(2);
+        // _enemies[1].SetRow(3);
         
         // Raise the combat start event to kick off the process
         CombatEvents.RaiseCombatStart(this, new StartCombatEventArgs(_players, _enemies));
@@ -107,7 +109,8 @@ public class TestCombatBootstrapper : MonoBehaviour
         foreach (var enemy in _enemies.Where(e => e.IsAlive))
         {
             // Choose enemy action (pick first action)
-            var action = enemy.CombatActions.FirstOrDefault();
+            var actionList = enemy.CombatActions;
+            var action = actionList.Count > 0 ? actionList[Random.Range(0, actionList.Count)] : actionList.FirstOrDefault();
 
             // Choose first alive player as target
             var target = _players.FirstOrDefault(p => p.IsAlive);

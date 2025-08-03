@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI-uss.uss?fileID=7433441132597879392&amp;guid=a561a3a1d204bc647a26523226a06c88&amp;type=3#UI-uss" />
+    <ui:VisualElement name="Root" style="flex-direction: column; padding: 10px; gap: 10px; width: 229px;">
+        <ui:Label name="CharacterNameLabel" text="Current Character" class="header" />
+        <ui:VisualElement name="ActionButtonsContainer" style="flex-direction: row; gap: 8px; height: 192px;" />
+        <ui:VisualElement name="TargetButtonsContainer" style="flex-direction: row; gap: 8px; height: 157px;" />
+        <ui:Button name="ConfirmButton" text="Confirm Action" style="width: 202px;" />
+    </ui:VisualElement>
+</ui:UXML>

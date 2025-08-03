@@ -21,3 +21,5 @@ MonoBehaviour:
   MaxHealth: 5
   CombatActions:
   - {fileID: 11400000, guid: d7f93504298556044850a8ff273b0594, type: 2}
+  - {fileID: 11400000, guid: d4d4d8c9e5e825849b23bd47da51eecc, type: 2}
+  - {fileID: 11400000, guid: 5284c0804afbb254ba40290149013be4, type: 2}

@@ -4,6 +4,8 @@ using _1_Scripts.CombatSystem.CombatActions;
 using _1_Scripts.CombatSystem.CombatActions.Interfaces;
 using _1_Scripts.CombatSystem.CombatEntities;
 using _1_Scripts.CombatSystem.DamageCalculators;
+using _1_Scripts.CombatSystem.Events;
+using _1_Scripts.CombatSystem.Managers;
 using _1_Scripts.CombatSystem.Services.Events;
 using UnityEngine;
 
@@ -50,6 +52,23 @@ namespace _1_Scripts.CombatSystem.Services.CombatService
                     target.GainEffect(effect.EffectType);
                 }
             }
+        }
+
+        /// <summary>
+        /// For moving (rethink the name
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="caster"></param>
+        public void ExecuteAction(BaseCombatAction action, CombatEntity caster)
+        {
+            if (action == null || caster == null) return;
+            if (action is not BaseCombatMoveAction moveAction) return;
+            var startingRow = caster.RowIndex;
+            var targetRowIndex = CombatTools.ClampToValidRow(caster.RowIndex + (moveAction.Direction * moveAction.Distance));
+            if (CombatManager.Instance.GetCombatantsInRow(targetRowIndex).Count >= 5) return;
+            caster.SetRow(targetRowIndex);
+            Debug.Log($"[CombatService] {caster.name} has moved to row {targetRowIndex} from {startingRow}.");
+            
         }
     }
 

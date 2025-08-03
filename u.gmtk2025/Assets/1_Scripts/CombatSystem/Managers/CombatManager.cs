@@ -65,6 +65,11 @@ namespace _1_Scripts.CombatSystem.Managers
                 .ToList();
         }
 
+        public List<CombatEntity> GetEnemies()
+        {
+            return _enemies;
+        }
+
         /// <summary>
         /// Gets the row of a specific combatant.
         /// </summary>
@@ -247,6 +252,7 @@ namespace _1_Scripts.CombatSystem.Managers
                 switch (turn.SelectedAction.CombatActionType)  
                 {
                     case CombatActionType.Move:
+                        _combatService.ExecuteAction( turn.SelectedAction, turn.Caster);
                         break;
                     case CombatActionType.Attack:
                         _combatService.ExecuteAction(turn.SelectedAction, turn.SelectedTargets, turn.Caster);
