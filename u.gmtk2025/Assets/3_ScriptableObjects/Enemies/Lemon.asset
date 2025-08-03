@@ -10,24 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c83cdf6688a8479eb01a59d553d9dfcf, type: 3}
-  m_Name: Player
+  m_Name: Lemon
   m_EditorClassIdentifier: 
-  Strength: 2
+  Strength: 1
   Agility: 1
   Cunning: 1
   Wisdom: 1
   Willpower: 1
   Intelligence: 1
-  MaxHealth: 5
+  MaxHealth: 3
   CombatActions:
-  - rid: 5164085091919462547
+  - rid: 5164085126334775361
+  - rid: 5164085126334775362
   references:
     version: 2
     RefIds:
-    - rid: 5164085091919462547
+    - rid: 5164085126334775361
       type: {class: BasicAttack, ns: _1_Scripts.CombatSystem.CombatActions.Examples, asm: Assembly-CSharp}
       data:
         _actionName: Basic Attack
         _accuracy: 1
         _critChance: 0.1
         _range: 1
+    - rid: 5164085126334775362
+      type: {class: FireAttack, ns: _1_Scripts.CombatSystem.CombatActions.Examples, asm: Assembly-CSharp}
+      data:
+        _actionName: FireAttack
+        _accuracy: 0.7
+        _critChance: 0.5
+        _range: 4

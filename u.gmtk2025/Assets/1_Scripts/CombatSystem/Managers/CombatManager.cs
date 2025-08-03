@@ -6,7 +6,7 @@ using _1_Scripts.CombatSystem.CombatEntities;
 using _1_Scripts.CombatSystem.Events;
 using _1_Scripts.CombatSystem.Managers.Enums;
 using _1_Scripts.CombatSystem.Managers.Turns;
-using _1_Scripts.CombatSystem.Services;
+using _1_Scripts.CombatSystem.Services.CombatService;
 using UnityEngine;
 
 namespace _1_Scripts.CombatSystem.Managers
@@ -52,15 +52,11 @@ namespace _1_Scripts.CombatSystem.Managers
 
             _combatService.OnDamageDealt += (sender, args) =>
             {
-                Debug.Log($"Damage dealt: {args.Damage} from {args.Caster.name} to {args.Target.name}");
-
-                if (!args.Target.IsAlive)
-                {
-                    Debug.Log($"[CombatManager] {args.Target.name} has died.");
-                    CombatEvents.RaiseCombatEntityDied(args.Target, 
-                        _players.Count(p => p.IsAlive), 
-                        _enemies.Count(e => e.IsAlive));
-                }
+                if (args.Target.IsAlive) return;
+                Debug.Log($"[CombatManager] {args.Target.name} has died.");
+                CombatEvents.RaiseCombatEntityDied(args.Target, 
+                    _players.Count(p => p.IsAlive), 
+                    _enemies.Count(e => e.IsAlive));
             };
         }
 
@@ -168,13 +164,11 @@ namespace _1_Scripts.CombatSystem.Managers
             value.SelectedAction = action;
             value.SelectedTargets = targets;
 
-            Debug.Log($"[CombatManager] Stored action '{action.CombatActionName}' for {caster.name}");
+            // Debug.Log($"[CombatManager] Stored action '{action.CombatActionName}' for {caster.name}");
 
-            if (AllAliveCombatantsSubmitted())
-            {
-                Debug.Log("[CombatManager] All actions received, proceeding to next phase.");
-                ProceedToNextPhase();
-            }
+            if (!AllAliveCombatantsSubmitted()) return;
+            Debug.Log("[CombatManager] All actions received, proceeding to next phase.");
+            ProceedToNextPhase();
         }
 
         private bool AllAliveCombatantsSubmitted()
@@ -195,11 +189,21 @@ namespace _1_Scripts.CombatSystem.Managers
 
             foreach (var turn in orderedTurns)
             {
+                if (!turn.Caster.IsAlive)
+                {
+                    Debug.Log($"[CombatManager] Entity: {turn.Caster.name} is dead and cannot resolve its action.");
+                    continue;
+                }
                 _combatService.ExecuteAction(turn.SelectedAction, turn.SelectedTargets, turn.Caster);
             }
 
             Debug.Log("[CombatManager] Round complete.");
             ProceedToNextPhase();
+        }
+
+        public bool IsEntityAlive(CombatEntity entity)
+        {
+            return entity.IsAlive;
         }
     }
 }
