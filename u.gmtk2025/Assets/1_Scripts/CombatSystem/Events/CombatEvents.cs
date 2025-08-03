@@ -21,6 +21,9 @@ namespace _1_Scripts.CombatSystem.Events
         
         public static event Action<CombatEntity> OnPlayerActionRequested;
         public static void RaisePlayerActionRequested(CombatEntity player) => OnPlayerActionRequested?.Invoke(player);
+
+        public static event Action<CombatEntity> OnTargetSelected;
+        public static void RaiseOnTargetSelected(CombatEntity target) => OnTargetSelected?.Invoke(target);
         
     }
 }

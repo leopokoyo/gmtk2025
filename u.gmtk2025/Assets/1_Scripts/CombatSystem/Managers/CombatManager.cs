@@ -70,6 +70,8 @@ namespace _1_Scripts.CombatSystem.Managers
             return _enemies;
         }
 
+        public List<CombatEntity> GetPlayers() => _players;
+
         /// <summary>
         /// Gets the row of a specific combatant.
         /// </summary>

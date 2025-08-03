@@ -56,5 +56,7 @@ namespace _1_Scripts.CombatSystem.Services.ActionSelectorService
             // Notify systems (e.g. UI or AI) that this player needs an action
             CombatEvents.RaisePlayerActionRequested(_currentPlayer);
         }
+
+        public CombatEntity GetCurrentPlayer() => _currentPlayer;
     }
 }
