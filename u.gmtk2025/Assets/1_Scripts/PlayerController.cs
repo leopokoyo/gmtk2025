@@ -11,8 +11,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float playerSpeed; // The higher the number, the slower the player moves
     int hashSwordAnimation;
     [SerializeField] GameObject Sword;
+    Rigidbody2D rb;
     void Start()
     {
+        rb = this.GetComponent<Rigidbody2D>();
         Sword.SetActive(false);
         animator = this.GetComponent<Animator>();
         overworldInput = GetComponent<PlayerInput>();
@@ -23,7 +25,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        playerMove = context.ReadValue<Vector2>();
+        playerMove = context.ReadValue<Vector2>().normalized;
     }
 
     public void OnAttack(InputAction.CallbackContext context)
@@ -32,9 +34,18 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(loseSword());
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        this.transform.position = new Vector3(this.transform.position.x + playerMove.x / playerSpeed, this.transform.position.y, this.transform.position.z + playerMove.y / playerSpeed);
+        if (playerMove != Vector2.zero)
+        {
+            rb.linearVelocity = playerMove/playerSpeed;
+        }
+        else
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
+        
+        //this.transform.position = new Vector3(this.transform.position.x + playerMove.x / playerSpeed, this.transform.position.y + playerMove.y / playerSpeed, this.transform.position.z);
     }
 
     public void swordActive()
