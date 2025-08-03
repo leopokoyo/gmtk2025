@@ -20,14 +20,4 @@ MonoBehaviour:
   Intelligence: 1
   MaxHealth: 5
   CombatActions:
-  - rid: 5164085091919462547
-  references:
-    version: 2
-    RefIds:
-    - rid: 5164085091919462547
-      type: {class: BasicAttack, ns: _1_Scripts.CombatSystem.CombatActions.Examples, asm: Assembly-CSharp}
-      data:
-        _actionName: Basic Attack
-        _accuracy: 1
-        _critChance: 0.1
-        _range: 1
+  - {fileID: 11400000, guid: d7f93504298556044850a8ff273b0594, type: 2}

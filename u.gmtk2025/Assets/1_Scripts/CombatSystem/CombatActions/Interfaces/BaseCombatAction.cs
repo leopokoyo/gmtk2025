@@ -7,12 +7,9 @@ using UnityEngine;
 namespace _1_Scripts.CombatSystem.CombatActions.Interfaces
 {
     [Serializable]
-    public abstract class BaseCombatAction
+    public abstract class BaseCombatAction : ScriptableObject
     {
-        [SerializeField]
-        public CombatActionType CombatActionType { get; }
-        
-        [SerializeField]
-        public  string CombatActionName { get; }
+        public virtual string CombatActionName => "Unnamed Action";
+        public abstract CombatActionType CombatActionType { get; }
     }
 }

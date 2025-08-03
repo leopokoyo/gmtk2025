@@ -9,15 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c83cdf6688a8479eb01a59d553d9dfcf, type: 3}
-  m_Name: Lemon
+  m_Script: {fileID: 11500000, guid: 1d76f0869a264237ae421e8578997e8e, type: 3}
+  m_Name: Combat Action - Basic Attack
   m_EditorClassIdentifier: 
-  Strength: 1
-  Agility: 1
-  Cunning: 1
-  Wisdom: 1
-  Willpower: 1
-  Intelligence: 1
-  MaxHealth: 3
-  CombatActions:
-  - {fileID: 11400000, guid: d7f93504298556044850a8ff273b0594, type: 2}
+  actionName: Basic Attack
+  accuracy: 1
+  critChance: 0.1
+  range: 1

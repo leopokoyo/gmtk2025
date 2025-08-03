@@ -19,8 +19,6 @@ namespace _1_Scripts.CombatSystem.CombatActions
         public virtual float CriticalHitChance { get; set; }
         public virtual int Range { get; set; }
         public List<ICombatEffects> CombatEffects { get; set; }
-
-        public CombatActionType CombatActionType => CombatActionType.Attack;
-        public virtual string CombatActionName { get; protected set; }
+        public override CombatActionType CombatActionType => CombatActionType.Attack;
     }
 }

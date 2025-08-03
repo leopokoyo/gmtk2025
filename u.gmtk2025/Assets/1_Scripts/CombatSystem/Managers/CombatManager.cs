@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using _1_Scripts.CombatSystem.CombatActions.Enums;
 using _1_Scripts.CombatSystem.CombatActions.Interfaces;
 using _1_Scripts.CombatSystem.CombatEntities;
 using _1_Scripts.CombatSystem.Events;
@@ -36,7 +37,7 @@ namespace _1_Scripts.CombatSystem.Managers
         }
 
         private Dictionary<CombatEntity, CombatTurn> _turnQueue = new();
-
+        
         private void Awake()
         {
             if (Instance != null && Instance != this)
@@ -59,12 +60,12 @@ namespace _1_Scripts.CombatSystem.Managers
                     _enemies.Count(e => e.IsAlive));
             };
         }
-
+        
         private void OnDestroy()
         {
             CombatEvents.OnCombatStart -= OnCombatStartHandler;
         }
-
+        
         private void OnCombatStartHandler(object sender, StartCombatEventArgs e)
         {
             Debug.Log("[CombatManager] Combat started");
@@ -90,7 +91,7 @@ namespace _1_Scripts.CombatSystem.Managers
             State = CombatState.Planning;
         }
 
-        public void ProceedToNextPhase()
+        private void ProceedToNextPhase()
         {
             switch (State)
             {
@@ -129,7 +130,7 @@ namespace _1_Scripts.CombatSystem.Managers
                     throw new ArgumentOutOfRangeException();
             }
         }
-
+        
         private void HandleCombatEnd()
         {
             Debug.Log("[CombatManager] Combat has ended.");
@@ -137,7 +138,7 @@ namespace _1_Scripts.CombatSystem.Managers
 
             State = CombatState.OutOfCombat;
         }
-
+        
         private void ClearTurnQueue()
         {
             foreach (var turn in _turnQueue.Values)
@@ -146,13 +147,13 @@ namespace _1_Scripts.CombatSystem.Managers
                 turn.SelectedTargets = null;
             }
         }
-
+        
         private void EndTurn()
         {
             Debug.Log("[CombatManager] Turn Ended.");
             ProceedToNextPhase();
         }
-
+        
         public void StorePlayerAction(CombatEntity caster, BaseCombatAction action, List<CombatEntity> targets)
         {
             if (!_turnQueue.TryGetValue(caster, out var value))
@@ -164,20 +165,20 @@ namespace _1_Scripts.CombatSystem.Managers
             value.SelectedAction = action;
             value.SelectedTargets = targets;
 
-            // Debug.Log($"[CombatManager] Stored action '{action.CombatActionName}' for {caster.name}");
+            Debug.Log($"[CombatManager] Stored action '{action.CombatActionName}' for {caster.name}");
 
             if (!AllAliveCombatantsSubmitted()) return;
             Debug.Log("[CombatManager] All actions received, proceeding to next phase.");
             ProceedToNextPhase();
         }
-
+        
         private bool AllAliveCombatantsSubmitted()
         {
             return _allCombatants
                 .Where(entity => entity.IsAlive)
                 .All(entity => _turnQueue[entity].SelectedAction != null);
         }
-
+        
         private void ResolveRound()
         {
             Debug.Log("[CombatManager] Resolving round...");
@@ -194,16 +195,26 @@ namespace _1_Scripts.CombatSystem.Managers
                     Debug.Log($"[CombatManager] Entity: {turn.Caster.name} is dead and cannot resolve its action.");
                     continue;
                 }
-                _combatService.ExecuteAction(turn.SelectedAction, turn.SelectedTargets, turn.Caster);
+                
+                switch (turn.SelectedAction.CombatActionType)  
+                {
+                    case CombatActionType.Move:
+                        break;
+                    case CombatActionType.Attack:
+                        _combatService.ExecuteAction(turn.SelectedAction, turn.SelectedTargets, turn.Caster);
+                        break;
+                    case CombatActionType.UseItem:
+                        break;
+                    default:
+                        Debug.Log($"[CombatManager] Entity: {turn.SelectedAction} is not a valid combat action (invalid CombatActionType).");
+                        throw new ArgumentOutOfRangeException();
+                }
             }
 
             Debug.Log("[CombatManager] Round complete.");
             ProceedToNextPhase();
         }
-
-        public bool IsEntityAlive(CombatEntity entity)
-        {
-            return entity.IsAlive;
-        }
+        
+        public bool IsEntityAlive(CombatEntity entity) => entity.IsAlive;
     }
 }

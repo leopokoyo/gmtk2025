@@ -7,7 +7,8 @@ namespace _1_Scripts.CombatSystem.CombatActions
     [Serializable]
     public class BaseCombatMoveAction : BaseCombatAction
     {
-        public CombatActionType CombatActionType => CombatActionType.Move;
-        public string CombatActionName { get; private set; }
+        public override CombatActionType CombatActionType => CombatActionType.Move;
+        public int Distance { get; set; }
+        public new virtual string CombatActionName { get; private set; }
     }
 }

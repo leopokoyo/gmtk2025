@@ -84,7 +84,7 @@ public class TestCombatBootstrapper : MonoBehaviour
             }
 
             // Wait 0.2 seconds before next player action
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.4f);
         }
 
         // All player actions selected; assign enemy actions immediately

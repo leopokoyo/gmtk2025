@@ -7,15 +7,15 @@ namespace _1_Scripts.CombatSystem.CombatActions.Examples
 {
     public class FireAttack : BaseCombatAttackAction
     {
-        [SerializeField] private string _actionName = "FireAttack";
-        [SerializeField] private float _accuracy = 0.7f;
-        [SerializeField] private float _critChance = 0.5f;
-        [SerializeField] private int _range = 4;
+        [SerializeField] private string actionName = "FireAttack";
+        [SerializeField] private float accuracy = 0.7f;
+        [SerializeField] private float critChance = 0.5f;
+        [SerializeField] private int range = 4;
 
-        public override string CombatActionName => _actionName;
-        public override float Accuracy => _accuracy;
-        public override float CriticalHitChance => _critChance;
-        public override int Range => _range;
+        public override string CombatActionName => actionName;
+        public override float Accuracy => accuracy;
+        public override float CriticalHitChance => critChance;
+        public override int Range => range;
 
         public override DamageCalculationDelegate DamageCalculator =>
             DamageCalculatorSamples.FireballAttackDamageCalculator;
